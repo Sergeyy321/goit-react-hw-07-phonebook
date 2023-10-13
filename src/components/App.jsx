@@ -2,31 +2,32 @@ import { Filter } from 'components/Filter/Filter';
 import { Contacts } from 'components/Contacts/Contacts';
 import { Phonebook } from 'components/Phonebook/Phonebook';
 import { ContactStyled } from './App/App.styled';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchContacts } from 'redux/operations';
+
+import {getContacts} from 'redux/selector'
+import { Loader } from './Loader/loader';
 
 export const App = () => {
 
-  const contacts = useSelector(state => state.contacts);
-  const filter = useSelector(state => state.filter);
+const dispatch = useDispatch();
+const {  isLoading, error } = useSelector(getContacts);
 
-  const getFilteredContacts = () => {
-    if (Array.isArray(contacts)) {
-      const normalizedValue = filter.toLowerCase().trim();
-      return contacts.filter(contact =>
-        contact.name.toLowerCase().includes(normalizedValue)
-      );
-    } else {
-      return [];
-    }
-  };
-
+useEffect(() => {
+    dispatch(fetchContacts());
+}, [dispatch]);
+  
+  
   return (
     <ContactStyled>
-      <Phonebook  />
+      <Phonebook />
       <div>
         <h2>Contacts</h2>
         <Filter />
-        <Contacts getContacts={getFilteredContacts()}  />
+        {isLoading === 'pending' && <Loader />}
+        {error && <b>{error}</b>}
+        <Contacts />
       </div>
     </ContactStyled>
   );

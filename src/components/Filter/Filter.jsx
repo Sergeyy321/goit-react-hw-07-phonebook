@@ -2,10 +2,11 @@ import { Input } from './FIlter.styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
 import { qwery } from 'redux/sliceFilters';
+import { selectFilter } from 'redux/selector';
 export const Filter = () => {
-  const filter = useSelector(state => state.filter);
   const dispatch = useDispatch();
 
+  const filter = useSelector(selectFilter);
   const id = nanoid();
 
   return (

@@ -4,22 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Btn } from './Phonebook.styled';
 import { useState } from 'react';
 import { addContact } from 'redux/sliceContacts';
+import { selectContacts } from 'redux/selector';
+import { selectId } from 'redux/selector';
 const nameId = nanoid(9);
 const numberId = nanoid(9);
-export const Phonebook = ({ onAddContact }) => {
-  // const [formData, setFormData] = useState({
-  //   name: '',
-  //   number: '',
-  // });
-
-  //   const onChange = (event) => {
-  //  const { name, value } = event.target;
-  //  setFormData({ ...formData, [name]: value });
-  //   };
-  const contacts = useSelector(state => state.contacts);
+export const Phonebook = () => {
+const id = useSelector(selectId);
   const dispatch = useDispatch();
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setNumber] = useState('');
+
+  const contacts = useSelector(selectContacts);
 
   const onChange = evt => {
     const { name, value } = evt.target;
@@ -30,11 +25,7 @@ export const Phonebook = ({ onAddContact }) => {
     setNumber('');
   };
 
-  //  const  onFormSubmit = event => {
-  //    event.preventDefault();
-  //     onAddContact(dispatch(addContact({ name, number })));
-  //     reset()
-  //   };
+ 
 
   return (
     <PhonebookStyled>
@@ -50,7 +41,7 @@ export const Phonebook = ({ onAddContact }) => {
           ) {
             alert(`${name} is alredy in contacts`);
           } else {
-            dispatch(addContact({ name, number }));
+            dispatch(addContact({id, name, phone }));
           }
           reset();
         }}
@@ -73,7 +64,7 @@ export const Phonebook = ({ onAddContact }) => {
           <Input
             id={numberId}
             type="tel"
-            value={number}
+            value={phone}
             onChange={onChange}
             name="number"
             pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
