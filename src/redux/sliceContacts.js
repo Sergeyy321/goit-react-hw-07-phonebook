@@ -48,7 +48,7 @@ export const sliceContact = createSlice({
       state.isLoading = false;
       state.error = null;
        const contactId = action.payload;
-       state.items = state.items.filter(contact => contact.id !== contactId);
+       state.items = state.items.filter(contact => contact.id !== contactId.id);
       
      
     },
