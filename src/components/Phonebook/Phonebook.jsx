@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
 import { Btn } from './Phonebook.styled';
 import { useState } from 'react';
-import { addContact } from 'redux/sliceContacts';
+import { addContact } from 'redux/operations';
 import { selectContacts } from 'redux/selector';
 import { selectId } from 'redux/selector';
 const nameId = nanoid(9);

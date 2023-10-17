@@ -6,17 +6,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchContacts } from 'redux/operations';
 
-import {getContacts} from 'redux/selector'
+import { selectIsLoading, selectError, selectContacts } from 'redux/selector';
 import { Loader } from './Loader/loader';
 
 export const App = () => {
-
+  const contacts = useSelector(selectContacts);
 const dispatch = useDispatch();
-const {  isLoading, error } = useSelector(getContacts);
+const isLoading = useSelector(selectIsLoading);
+const error = useSelector(selectError);
 
-useEffect(() => {
-    dispatch(fetchContacts());
-}, [dispatch]);
   
   
   return (
@@ -25,7 +23,8 @@ useEffect(() => {
       <div>
         <h2>Contacts</h2>
         <Filter />
-        {isLoading === 'pending' && <Loader />}
+        {contacts.length === 0 && 'No contacts found'}
+        {isLoading === true && <Loader />}
         {error && <b>{error}</b>}
         <Contacts />
       </div>

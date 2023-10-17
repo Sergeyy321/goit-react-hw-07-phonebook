@@ -1,15 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { nanoid } from 'nanoid';
-import { fetchContacts } from './operations';
 
-// const handlePending = state => {
-//   state.isLoading = true;
-// };
 
-// const handleRejected = (state, action) => {
-//   state.isLoading = false;
-//   state.error = action.payload;
-// };
+import { fetchContacts, addContact, deleteContact } from './operations';
+
+const handlePending = state => {
+  state.isLoading = true;
+};
+
+const handleRejected = (state, action) => {
+ 
+  state.isLoading = false;
+  state.error = action.payload;
+};
 
 export const sliceContact = createSlice({
   name: 'contacts',
@@ -33,23 +35,28 @@ export const sliceContact = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    addContact(state, action) {
-      state.push({
-        id: action.payload.id,
-        name: action.payload.name,
-        number: action.payload.phone,
-      });
+    [addContact.pending]: handlePending,
+    [addContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.items.push(action.payload);
+       
     },
-
-    deleteContact(state, action) {
-      return state.filter(item => item.id !== action.payload);
+    [addContact.rejected]: handleRejected,
+    [deleteContact.pending]: handlePending,
+    [deleteContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+       const contactId = action.payload;
+       state.items = state.items.filter(contact => contact.id !== contactId);
+      
+     
     },
+    [deleteContact.rejected]: handleRejected,
   },
 });
 export const tasksReducer = sliceContact.reducer;
 export const {
-  addContact,
-  deleteContact,
   fetchingInProgress,
   fetchingSuccess,
   fetchingError,

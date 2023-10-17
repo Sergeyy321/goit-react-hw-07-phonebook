@@ -1,22 +1,23 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { ContactStyle } from './Contacts.styled';
-import { deleteContact } from 'redux/sliceContacts';
+import { deleteContact,fetchContacts } from 'redux/operations';
 import { useSelector,useDispatch } from 'react-redux';
-import { selectContacts, selectFilter } from 'redux/selector';
+import { selectContacts,selectFilter } from 'redux/selector';
 export const Contacts = () => {
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
+ const getContacts = () => {
+   const normalizedValue = filter.toLowerCase().trim();
+   return contacts.filter(contact =>
+     contact.name.toLowerCase().includes(normalizedValue)
+   );
+ };
   const dispatch = useDispatch();
-  const getContacts = () => {
-    if (Array.isArray(contacts)) {
-      const normalizedValue = filter.toLowerCase().trim();
-      return contacts.filter(contact =>
-        contact.name.toLowerCase().includes(normalizedValue)
-      );
-    } else {
-      return [];
-    }
-  };
+ useEffect(() => {
+   dispatch(fetchContacts()); // діспатчимо екшен
+ }, [dispatch]);
+
 
   return (
     <ContactStyle>
@@ -40,13 +41,3 @@ export const Contacts = () => {
   );
 };
 
-// Contacts.propTypes = {
-//   contacts: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.string.isRequired,
-//       name: PropTypes.string.isRequired,
-//       number: PropTypes.string.isRequired,
-//     })
-//   ),
-//   onDelete: PropTypes.func.isRequired,
-// };
